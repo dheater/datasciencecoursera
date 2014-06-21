@@ -1,3 +1,5 @@
+require(reshape2)
+
 run_analysis <- function() {
 
     # 1. Merges the training and the test sets to create one data set.
@@ -29,13 +31,6 @@ run_analysis <- function() {
     # Put tidy names on all of the columns.
     colnames(ds) <- c("Subject", "Activity", labels)
 
-    # 2. Extracts only the measurements on the mean and standard deviation for each measurement.
-    # Make subset of mean and std deviation.
-    mean_std = c(grep("std", ignore.case=TRUE, names(ds)),
-                 grep("mean", ignore.case=TRUE, names(ds)))
-
-    mean_std_ds = subset(ds, select=mean_std)
-
     # 3. Uses descriptive activity names to name the activities in the data set
     # Convert activities from numerics to factors.
     activities = read.table("activity_labels.txt")
@@ -43,11 +38,26 @@ run_analysis <- function() {
     levels(fdata) = activities[,2]
     ds$Activity = cut(ds$Activity, 6, activities[,2])
 
+    # 2. Extracts only the measurements on the mean and standard deviation for each measurement.
+    # Make subset of mean and std deviation.
+    filter = c(grep("std", ignore.case=TRUE, names(ds)),
+               grep("mean", ignore.case=TRUE, names(ds)))
+
+    mean_std = subset(ds, select=c(Subject, Activity, filter))
+
+    # Write the table.
+    write.table(mean_std, "mean_std.txt")
+
     # 5. Creates a second, independent tidy data set with the average of each
     # variable for each activity and each subject
-    # Write the tidy data to a file.
-    write.table(ds, "tidydata.txt")
 
-    # Return the tidy dataset.
-    ds
+    # Melt the data id'd by activity and subject and take the mean of the id combinations.
+    mdata=melt(ds, id=c("Activity", "Subject"))
+    tidydata=dcast(mdata,Activity+Subject~variable, mean)
+
+    # Write the tidy data to a file.
+    write.table(tidydata, "tidydata.txt")
+
+    # Supress the return value.
+    return(NULL)
 }
