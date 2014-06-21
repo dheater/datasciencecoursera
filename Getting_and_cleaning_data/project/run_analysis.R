@@ -1,5 +1,5 @@
 run_analysis <- function() {
-    
+
     # Read and bind all of the test data into columns.
     test.subject=read.table("test/subject_test.txt")
     test.x=read.table("test/X_test.txt")
@@ -15,10 +15,17 @@ run_analysis <- function() {
     # Row bind the test and training datasets together.
     ds=rbind(test.data, train.data)
 
-    # Read in the labels from the features file.
-    labels = read.table("features.txt")
+    # Read in the labels from the features file and clean them up.
+    features = read.table("features.txt")
+    labels = sapply(features[,2], toString)
+    labels = gsub("()", "", labels, fixed=TRUE)
+    labels = gsub(")", "", labels, fixed=TRUE)
+    labels = gsub("(", "_", labels, fixed=TRUE)
+    labels = gsub(",", "_", labels, fixed=TRUE)
+    labels = gsub("-", "_", labels, fixed=TRUE)
 
-    #colnames(ds) <- c("Subject", "Activity", toString(labels[,2]))
+    # Put tidy names on all of the columns.
+    colnames(ds) <- c("Subject", "Activity", labels)
 
     ds
 }
