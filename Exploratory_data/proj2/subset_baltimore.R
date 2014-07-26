@@ -1,4 +1,4 @@
-# Subset the NEI data to just the data from Balimore. Store that data in a
+# Subset the NEI data to just the data from Baltimore. Store that data in a
 # global variable so it is cached (I.e., we only have to create the subset
 # once).
 subset_baltimore <- function() {
