@@ -13,6 +13,6 @@ plot1 <- function() {
 
     # Assume that all samples (rows) are independent. I.e, emmisions are not
     # double-booked in the dataset
-    year.total.emm <- tapply(NEI.M$Emissions, NEI.M$year, sum)
+    year.total.emm <<- tapply(NEI.M$Emissions, NEI.M$year, sum)
     barplot(year.total.emm, xlab="Year",ylab=expression(Emissions/Year~(Tons~PM[2.5])))
 }
