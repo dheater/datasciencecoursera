@@ -5,7 +5,7 @@
 # Use the ggplot2 plotting system to make a plot answer this question.
 
 require('ggplot2')
-require('reshape2')
+require('reshape')
 
 plot3 <- function() {
 
